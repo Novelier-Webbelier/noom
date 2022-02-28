@@ -1,0 +1,22 @@
+{
+  "name": "noom",
+  "version": "1.0.0",
+  "description": "The best way to videoncerencing",
+  "keywords": [],
+  "author": "Noveleir Webbelier<novelier.webbelier@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "pug": "^3.0.2"
+  }
+}
