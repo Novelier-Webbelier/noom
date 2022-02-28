@@ -5,6 +5,8 @@ import express from "express";
 const app = express();
 const PORT = 3000;
 
+const sockets = [];
+
 app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
@@ -20,10 +22,6 @@ const handleListen = () => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-function onSocketMessage(message) {
-  console.log(message.toString("utf-8"));
-}
-
 function onSocketConnected() {
   console.log("✅ Connected to Browser");
 }
@@ -33,10 +31,16 @@ function onSocketClose() {
 }
 
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   onSocketConnected();
   socket.on("close", onSocketClose);
-  socket.on("message", onSocketMessage);
-  socket.send("Hello!");
+  socket.on("message", (message) => {
+    sockets.forEach((aSocket) => aSocket.send(message.toString()));
+  });
 });
+
+setInterval(() => {
+  console.log(sockets.length);
+}, 1000);
 
 server.listen(PORT, handleListen);
