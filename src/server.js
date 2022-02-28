@@ -20,13 +20,23 @@ const handleListen = () => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-wss.on("connection", (socket) => {
+function onSocketMessage(message) {
+  console.log(message.toString("utf-8"));
+}
+
+function onSocketConnected() {
   console.log("✅ Connected to Browser");
-  socket.on("close", () => console.log("❌ Disconnected to Server"));
-  socket.on("message", (message) => {
-    console.log(message.toString("utf-8"));
-  });
+  socket.on("close", onSocketClose);
+  socket.on("message", onSocketMessage);
   socket.send("Hello!");
+}
+
+function onSocketClose() {
+  console.log("❌ Disconnected to Server");
+}
+
+wss.on("connection", (socket) => {
+  onSocketConnected();
 });
 
 server.listen(PORT, handleListen);
