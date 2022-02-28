@@ -26,9 +26,6 @@ function onSocketMessage(message) {
 
 function onSocketConnected() {
   console.log("✅ Connected to Browser");
-  socket.on("close", onSocketClose);
-  socket.on("message", onSocketMessage);
-  socket.send("Hello!");
 }
 
 function onSocketClose() {
@@ -37,6 +34,9 @@ function onSocketClose() {
 
 wss.on("connection", (socket) => {
   onSocketConnected();
+  socket.on("close", onSocketClose);
+  socket.on("message", onSocketMessage);
+  socket.send("Hello!");
 });
 
 server.listen(PORT, handleListen);
