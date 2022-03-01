@@ -25,8 +25,7 @@ function createLiTag(message) {
 }
 
 function putMessage(message) {
-  messageList.innerHT;
-  ML += createLiTag(message);
+  messageList.innerHTML += createLiTag(message);
 }
 
 socket.addEventListener("open", () => {
