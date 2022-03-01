@@ -5,6 +5,7 @@ import express from "express";
 const app = express();
 const PORT = 3000;
 
+// This is a fake user database
 const sockets = [];
 
 app.set("view engine", "pug");
@@ -13,6 +14,10 @@ app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
   return res.render("home");
+});
+
+app.get("/*", (req, res) => {
+  return res.redirect("/");
 });
 
 const handleListen = () => {
@@ -38,9 +43,5 @@ wss.on("connection", (socket) => {
     sockets.forEach((aSocket) => aSocket.send(message.toString()));
   });
 });
-
-setInterval(() => {
-  console.log(sockets.length);
-}, 1000);
 
 server.listen(PORT, handleListen);
