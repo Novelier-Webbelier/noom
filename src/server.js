@@ -38,9 +38,21 @@ function onSocketClose() {
 wss.on("connection", (socket) => {
   sockets.push(socket);
   onSocketConnected();
+
+  socket["nickname"] = "Anon";
   socket.on("close", onSocketClose);
   socket.on("message", (message) => {
-    sockets.forEach((aSocket) => aSocket.send(message.toString()));
+    const msg = JSON.parse(message);
+
+    switch (msg.type) {
+      case "new_msg":
+        sockets.forEach((aSocket) =>
+          aSocket.send(`${socket.nickname} : ${msg.payload}`)
+        );
+
+      case "nickname":
+        socket["nickname"] = msg.payload;
+    }
   });
 });
 

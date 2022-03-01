@@ -10,7 +10,7 @@ function makeMessage(type, payload) {
 function handleSubmit(event) {
   event.preventDefault();
   const input = messageForm.querySelector("input");
-  socket.send(makeMessage("new_mgs", input.value));
+  socket.send(makeMessage("new_msg", input.value));
   input.value = "";
 }
 
