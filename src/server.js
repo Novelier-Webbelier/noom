@@ -14,10 +14,10 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (_, res) => res.render("home"));
 
 wsServer.on("connection", (socket) => {
-  socket.on("enter_room", (msg, done) => {
-    console.log(msg);
+  socket.on("enter_room", (roomName, done) => {
+    console.log(roomName);
     setTimeout(() => {
-      done();
+      done("hello from the backend");
     }, 1000);
   });
 });
