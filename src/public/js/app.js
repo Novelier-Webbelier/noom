@@ -23,4 +23,13 @@ function handleRommSubmit(event) {
   input.value = "";
 }
 
+function sendMessage(message) {
+  const ul = room.querySelector("ul");
+  ul.innerHTML += `<li>${message}</li>`;
+}
+
 form.addEventListener("submit", handleRommSubmit);
+
+socket.on("welcome", () => {
+  sendMessage("Some joined!");
+});
