@@ -17,10 +17,20 @@ wsServer.on("connection", (socket) => {
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
+
   socket.on("enter_room", (roomName, done) => {
     socket.join(roomName);
     done();
     socket.to(roomName).emit("welcome");
+  });
+
+  socket.on("new_message", (message, roomName, done) => {
+    socket.to(roomName).emit("new_message", message);
+    done();
+  });
+
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
   });
 });
 
