@@ -17,7 +17,7 @@ function handleMessageSubmit(event) {
   const input = room.querySelector("#msg input");
   const content = input.value;
   socket.emit("new_message", content, roomName, () => {
-    sendMessage(`You : ${content}`);
+    sendMessage(room.querySelector("ul"), `You : ${content}`);
   });
   clearInput(input);
 }
@@ -48,21 +48,32 @@ function showRoom(msg) {
   nameForm.addEventListener("submit", handleNameSubmit);
 }
 
-function sendMessage(message) {
-  const ul = room.querySelector("ul");
-  ul.innerHTML += `<li>${message}</li>`;
+function sendMessage(parentTag, message) {
+  parentTag.innerHTML += `<li>${message}</li>`;
+}
+
+function clearMessage(parentTag) {
+  parentTag.innerHTML = "";
 }
 
 form.addEventListener("submit", handleRommSubmit);
 
 socket.on("welcome", (user) => {
-  sendMessage(`${user} arrived!`);
+  sendMessage(room.querySelector("ul"), `${user} arrived!`);
 });
 
 socket.on("new_message", (message) => {
-  sendMessage(`${message}`);
+  sendMessage(room.querySelector("ul"), `${message}`);
 });
 
 socket.on("bye", (left) => {
-  sendMessage(`${left} left!`);
+  sendMessage(room.querySelector("ul"), `${left} left!`);
+});
+
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  clearMessage(roomList);
+  rooms.forEach((room) => {
+    sendMessage(roomList, room);
+  });
 });
