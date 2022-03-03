@@ -13,9 +13,27 @@ app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (_, res) => res.render("home"));
 
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = wsServer;
+
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+}
+
 wsServer.on("connection", (socket) => {
   socket["nickname"] = "Anon";
   socket.onAny((event) => {
+    console.log(wsServer.sockets.adapter);
+    console.log(publicRooms());
     console.log(`Socket Event : ${event}`);
   });
 
