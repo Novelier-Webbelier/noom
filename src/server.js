@@ -14,6 +14,7 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (_, res) => res.render("home"));
 
 wsServer.on("connection", (socket) => {
+  socket["nickname"] = "Anon";
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
@@ -21,16 +22,20 @@ wsServer.on("connection", (socket) => {
   socket.on("enter_room", (roomName, done) => {
     socket.join(roomName);
     done();
-    socket.to(roomName).emit("welcome");
+    socket.to(roomName).emit("welcome", socket.nickname);
   });
 
   socket.on("new_message", (message, roomName, done) => {
-    socket.to(roomName).emit("new_message", message);
+    socket.to(roomName).emit("new_message", `${socket.nickname} : ${message}`);
     done();
   });
 
+  socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
+
   socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit("bye", socket.nickname)
+    );
   });
 });
 
