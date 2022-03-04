@@ -14,6 +14,14 @@ const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 const PORT = 3000;
 
+wsServer.on("connection", (socket) => {
+  socket.on("join_room", (roomName, done) => {
+    socket.join(roomName);
+    done();
+    socket.to(roomName).emit("welcome");
+  });
+});
+
 httpServer.listen(
   PORT,
   console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`)
