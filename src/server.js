@@ -15,13 +15,15 @@ const wsServer = SocketIO(httpServer);
 const PORT = 3000;
 
 wsServer.on("connection", (socket) => {
-  socket.on("join_room", (roomName, done) => {
+  socket.on("join_room", (roomName) => {
     socket.join(roomName);
-    done();
     socket.to(roomName).emit("welcome");
   });
   socket.on("offer", (offer, roomName) => {
     socket.to(roomName).emit("offer", offer);
+  });
+  socket.on("answer", (answer, roomName) => {
+    socket.to(roomName).emit(answer);
   });
 });
 
