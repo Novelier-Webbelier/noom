@@ -97,6 +97,13 @@ const welcomeForm = welcome.querySelector("form");
 
 async function handleCameraChange() {
   await getMedia(camerasSelect.value);
+  if (myPeerConnection) {
+    const videoTrack = myStream.getVideoTracks()[0];
+    const videoSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kin === "video");
+    videoSender.replaceTrack(videoTrack);
+  }
 }
 
 async function initCall() {
